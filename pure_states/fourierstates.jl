@@ -32,7 +32,8 @@ end
 end
 
 function main()
-	Repe=20;
+	Repe=5;
+#     Repe = 20;
     file=h5open("HaarStates.h5","r");
     Dims=file["dimensions"][:];
 	MC=file["montecarlo"][1][1];
@@ -42,7 +43,7 @@ function main()
 
 	for h=1:DimN;
 		Dim=Dims[h];
-		N=3;
+		N=4;
 		OutStates=file["statesdim="*string(Dim)][:,:]
 		F = QuantumFourier(Dim);
 		println("dim="*string(Dim),"      ","n="*string(N))
@@ -56,7 +57,7 @@ function main()
 			end
 		end
 
-		file2=h5open("DataStatesDim="*string(Dim)*"Lay="*string(N)*".h5","w");
+		file2=h5open("data/DataStatesDim="*string(Dim)*"Lay="*string(N)*".h5","w");
 		file2["infi"]=Data[h,:,:];
 		file2["phases"]=Phases;
 		close(file2)
