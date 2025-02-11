@@ -32,12 +32,12 @@ end
 end
 
 function main()
-
+    Repe = 5
 	Matrices=matread("data_contraejemplos.mat")["data_contraejemplos"];
 	DimN=size(Matrices)[2];
 	MC=size(Matrices[1][1])[3];
 	Data=SharedArray{Float64}(DimN,MC,Repe);
-	println("hola");
+    println("hola","lays="*String(N),"MC="* String( MC) );
 	
 
 	for h=1:DimN;
