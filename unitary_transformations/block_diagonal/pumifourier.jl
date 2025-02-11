@@ -39,12 +39,12 @@ function main()
 	Data=SharedArray{Float64}(DimN,MC,Repe);
     println("hola","lays="*String(N),"MC="* String( MC) );
 	
-
 	for h=1:DimN;
 		Dim=2+h;
 		N=Dim+2;
 		UU=Matrices[h][1];
 		F = QuantumFourier(Dim);
+        println("hola","lays="*String(N),"MC="* String( MC) );
 		println(Dim)
 		@time @sync @distributed for i=1:MC
 			U=UU[:,:,i];
