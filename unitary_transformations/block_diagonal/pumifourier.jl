@@ -43,7 +43,7 @@ function main()
 		N=Dim+2;
 		UU=Matrices[h][1];
 		F = QuantumFourier(Dim);
-        println("hola","lays="*String(N),"MC="* String( MC) );
+        println("hola","lays="*string(N),"MC="* string( MC) );
 		println(Dim)
 		@time @sync @distributed for i=1:MC
 			U=UU[:,:,i];
