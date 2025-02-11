@@ -32,7 +32,6 @@ end
 end
 
 function main()
-	Repe=3*10^1;
 
 	Matrices=matread("data_contraejemplos.mat")["data_contraejemplos"];
 	DimN=size(Matrices)[2];
@@ -43,7 +42,7 @@ function main()
 
 	for h=1:DimN;
 		Dim=2+h;
-		N=Dim;
+		N=Dim+2;
 		UU=Matrices[h][1];
 		F = QuantumFourier(Dim);
 		println(Dim)
@@ -53,13 +52,13 @@ function main()
 				Data[h,i,j]=PUMIOpt(F,Dim,N,U);
 			end
 		end
-		file=matopen("lucianodatadim="*string(Dim)*".mat","w")
+		file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay="*string(N)*".mat","w")
 		write(file,"infi",Data[h,:,:])
 		close(file)
 	end
-	file=matopen("lucianodata.mat","w")
-	write(file,"infi",Data)
-	close(file)
+# 	file=matopen("lucianodata.mat","w")
+# 	write(file,"infi",Data)
+# 	close(file)
 end 
 
 main()
