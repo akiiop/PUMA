@@ -32,8 +32,7 @@ end
 end
 
 function main()
-	Repe=5;
-#     Repe = 20;
+    Repe = 20;
     file=h5open("HaarStates.h5","r");
     Dims=file["dimensions"][:];
 	MC=file["montecarlo"][1][1];

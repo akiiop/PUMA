@@ -1,6 +1,6 @@
 using HDF5, LinearAlgebra
 
-MC=5*10^2;
+MC=5*10^3;
 file=h5open("HaarStates.h5","w");
 Dims=collect(3:10);
 DimN=size(Dims)[1];
