@@ -37,7 +37,7 @@ function main()
 	DimN=size(Matrices)[2];
 	MC=size(Matrices[1][1])[3];
 	Data=SharedArray{Float64}(DimN,MC,Repe);
-	print("Repe="*string(Repe))
+	print("Repe="*string(Repe));
 	for h=1:DimN;
 		Dim=2+h;
 		L=1
@@ -45,7 +45,7 @@ function main()
 		UU=Matrices[h][1];
 		F = QuantumFourier(Dim);
         println("lays="*string(N),"     MC="* string( MC) );
-		println(Dim)
+		println(Dim);
 		@time @sync @distributed for i=1:MC
 			U=UU[:,:,i];
 			for j=1:Repe
