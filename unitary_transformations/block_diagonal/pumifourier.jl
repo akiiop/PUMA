@@ -1,6 +1,6 @@
 using Distributed, SharedArrays, MAT
 
-addprocs(20)
+addprocs(10)
 @everywhere using LinearAlgebra, Optim
 
 @everywhere function RandomUnitary(Dim)
@@ -32,18 +32,19 @@ end
 end
 
 function main()
-    Repe = 5
+    Repe = 30
 	Matrices=matread("data_contraejemplos.mat")["data_contraejemplos"];
 	DimN=size(Matrices)[2];
 	MC=size(Matrices[1][1])[3];
 	Data=SharedArray{Float64}(DimN,MC,Repe);
-	
+	print("Repe="*string(Repe))
 	for h=1:DimN;
 		Dim=2+h;
-		N=Dim+2;
+		L=1
+		N=Dim+L;
 		UU=Matrices[h][1];
 		F = QuantumFourier(Dim);
-        println("hola","lays="*string(N),"MC="* string( MC) );
+        println("lays="*string(N),"     MC="* string( MC) );
 		println(Dim)
 		@time @sync @distributed for i=1:MC
 			U=UU[:,:,i];
@@ -51,7 +52,7 @@ function main()
 				Data[h,i,j]=PUMIOpt(F,Dim,N,U);
 			end
 		end
-		file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay="*string(N)*".mat","w")
+		file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".mat","w")
 		write(file,"infi",Data[h,:,:])
 		close(file)
 	end
