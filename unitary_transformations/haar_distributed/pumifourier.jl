@@ -1,6 +1,6 @@
 using Distributed, HDF5
 
-addprocs(2)
+addprocs(10)
 @everywhere using LinearAlgebra, SharedArrays, Optim
 
 @everywhere function RandomUnitary(Dim)
