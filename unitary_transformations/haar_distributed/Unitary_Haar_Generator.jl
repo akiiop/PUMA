@@ -11,7 +11,7 @@ for i=1:DimN
 #     z=randn(Dims[i],MC)+1im*randn(Dims[i],MC);
 #     states=z./sqrt.(sum(abs2.(z),dims=1))
     
-    qr( randn(Dim,Dim)+1im*randn(Dim,Dim) ).Q;
+    qr( randn(Dims,Dims)+1im*randn(Dims,Dims) ).Q;
     file["unitarydim="*string(Dims[i])]=states
 end
 close(file)
