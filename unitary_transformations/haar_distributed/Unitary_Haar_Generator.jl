@@ -1,11 +1,13 @@
 using HDF5, LinearAlgebra
 
-MC=50;
+MC=1000;
 file=h5open("HaarUnitary.h5","w");
 Dims=collect(3:10);
 DimN=size(Dims)[1];
 file["dimensions"]=Dims
 file["montecarlo"]=[MC]
+
+@show MC
 
 for i=1:DimN
     mat = randn(Dims[i],Dims[i],MC)+1im*randn(Dims[i],Dims[i],MC)
