@@ -1,6 +1,6 @@
 using Distributed, SharedArrays, HDF5
 
-addprocs(10)
+addprocs(2)
 @everywhere using LinearAlgebra, Optim
 
 @everywhere function RandomUnitary(Dim)
@@ -32,30 +32,35 @@ end
 end
 
 function main()
-    Repe = 30
-	Matrices=matread("haar_distibuted_matrices.h5")["matrices"];
-	DimN=size(Matrices)[2];
-	MC=size(Matrices[1][1])[3];
-	Data=SharedArray{Float64}(DimN,MC,Repe);
-	print("Repe="*string(Repe));
-	for h=1:DimN;
-		Dim=2+h;
-		L=1
-		N=Dim+L;
-		UU=Matrices[h][1];
-		F = QuantumFourier(Dim);
+    Repe = 2
+    file = h5open("HaarUnitary.h5","r")
+    MC = file["montecarlo"][1]
+    Dims = file["dimensions"][:]
+    DimN=size(Dims)[1]
+    Data=SharedArray{Float64}(DimN,MC,Repe)
+    print("Repe="*string(Repe));
+
+    for (Dim,h) in enumarate(Dims)
+        L=0
+        N=Dim+L
+        UU = file["unitarydim="*string(Dim)][:,:,:]
+        F = QuantumFourier(Dim);
         println("lays="*string(N),"     MC="* string( MC) );
-		println(Dim);
-		@time @sync @distributed for i=1:MC
-			U=UU[:,:,i];
-			for j=1:Repe
-				Data[h,i,j]=PUMIOpt(F,Dim,N,U);
-			end
-		end
-		file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".mat","w")
-		write(file,"infi",Data[h,:,:])
-		close(file)
-	end
+        println(Dim);
+        @time @sync @distributed for i=1:MC
+            U=UU[:,:,i];
+            for j=1:Repe
+                Data[h,i,j]=PUMIOpt(F,Dim,N,U);
+            end
+        end
+        datasave = h5open("data/HaarDistributed_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".mat","w")
+        datasave["infi"]= Data[h,:,:]
+        close(file)
+#         file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".mat","w")
+#         write(file,"infi",Data[h,:,:])
+#         close(file)
+    end
+    close(file)
 # 	file=matopen("lucianodata.mat","w")
 # 	write(file,"infi",Data)
 # 	close(file)

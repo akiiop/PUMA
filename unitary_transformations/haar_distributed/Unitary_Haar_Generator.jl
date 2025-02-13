@@ -1,6 +1,6 @@
 using HDF5, LinearAlgebra
 
-MC=1000;
+MC=50;
 file=h5open("HaarUnitary.h5","w");
 Dims=collect(3:10);
 DimN=size(Dims)[1];
