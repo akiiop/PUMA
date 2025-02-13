@@ -8,10 +8,10 @@ file["dimensions"]=Dims
 file["montecarlo"]=[MC]
 
 for i=1:DimN
-#     z=randn(Dims[i],MC)+1im*randn(Dims[i],MC);
-#     states=z./sqrt.(sum(abs2.(z),dims=1))
-    
-    matrices =  qr( randn(Dims[i],Dims[i])+1im*randn(Dims[i],Dims[i]) ).Q;
-    file["unitarydim="*string(Dims[i])]=matrices
+    mat = randn(Dims[i],Dims[i],MC)+1im*randn(Dims[i],Dims[i],MC)
+    for j=1:MC
+        mat[:,:,j]= Matrix( qr( mat[:,:,j] ).Q )
+    end
+    file["unitarydim="*string(Dims[i])] = mat
 end
 close(file)
