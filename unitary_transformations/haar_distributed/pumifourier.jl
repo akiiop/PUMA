@@ -46,7 +46,7 @@ function main()
 
     for (h,Dim) in enumerate(Dims)
         
-        L=0
+        L=1
         N=Dim+L
         UU = file["unitarydim="*string(Dim)][:,:,:]
         F = QuantumFourier(Dim)
