@@ -1,3 +1,7 @@
+# Introduction
+Repository for the simulations and data of the article [Minimum optical depth multi-port interferometers for approximating any unitary transformation and any pure state](https://doi.org/10.48550/arXiv.2002.01371)
+
+
 # Pure States
 
 `PureStateReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the states are provided with a HDF5 file named `HaarStates.h5`. This HDF5 can be generated using the program `Haar_Generator.jl` (Refer to this file in doubt of what the `HaarStates.h5` needs to contain). The data after running `PureStateReconstructor.jl` is stored in the `data` folder.
