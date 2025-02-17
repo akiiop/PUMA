@@ -42,7 +42,7 @@ function main()
     
     Data=SharedArray{Float64}(DimN,MC,Repe)
     
-    @show Repe
+    @show Repe,MC
 
     for (h,Dim) in enumerate(Dims)
         
@@ -51,7 +51,7 @@ function main()
         UU = file["unitarydim="*string(Dim)][:,:,:]
         F = QuantumFourier(Dim)
         
-        @show N,MC,Dim
+        @show N,Dim
         
         @time @sync @distributed for i=1:MC
             

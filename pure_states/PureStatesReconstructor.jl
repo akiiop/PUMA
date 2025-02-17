@@ -1,7 +1,7 @@
-using Distributed, SharedArrays, MAT, HDF5
+using Distributed, MAT, HDF5
 
 addprocs(4)
-@everywhere using LinearAlgebra, Optim
+@everywhere using LinearAlgebra, SharedArrays, Optim
 
 @everywhere function RandomUnitary(Dim)
 	return qr( randn(Dim,Dim)+1im*randn(Dim,Dim) ).Q;
@@ -28,7 +28,7 @@ end
 	Seed = pi*randn( (N+1)*(Dim-1) );
 	TargetOpt(x) = 1 - Fid( Output , StateFunction( x , InState, F , Dim , N) , Dim );
 	Res=Optim.minimizer( optimize( TargetOpt , Seed , LBFGS() ) );
-	return TargetOpt(Res),Res;
+	return TargetOpt(Res);
 end
 
 function main()
@@ -38,27 +38,25 @@ function main()
 	MC=file["montecarlo"][1][1];
     DimN=size(Dims[1:end])[1];
 	Data=SharedArray{Float64}(DimN,MC,Repe);
-	println("hola   ", MC);
+    @show Repe, MC
 
 	for h=1:DimN;
 		Dim=Dims[h];
 		N=4;
 		OutStates=file["statesdim="*string(Dim)][:,:]
 		F = QuantumFourier(Dim);
-		println("dim="*string(Dim),"      ","n="*string(N))
-		Phases=zeros((N+1)*(Dim-1),Repe,MC);
+        @show Dim, N
         InState=Matrix{Complex{Float64}}(I,Dim,Dim)[1,:];
 
 		@time @sync @distributed for i=1:MC
 			@views State=OutStates[:,i];
 			for j=1:Repe
-				Data[h,i,j],Phases[:,j,i]=PUMIOpt(F,Dim,InState,State,N);
+				Data[h,i,j]=PUMIOpt(F,Dim,InState,State,N);
 			end
 		end
 
 		file2=h5open("data/DataStatesDim="*string(Dim)*"Lay="*string(N)*".h5","w");
 		file2["infi"]=Data[h,:,:];
-		file2["phases"]=Phases;
 		close(file2)
 	end
     close(file)
