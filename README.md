@@ -9,7 +9,7 @@ Repository for the simulations and data of the article [Minimum optical depth mu
 
 # Pure States
 
-`PureStateReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the states are provided with a HDF5 file named `HaarStates.h5`. This HDF5 can be generated using the program `Haar_Generator.jl` (Refer to this file in doubt of what the `HaarStates.h5` needs to contain). The data after running `PureStateReconstructor.jl` is stored in the `data` folder.
+`PureStateReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the target states are provided with a HDF5 file named `HaarStates.h5`. This HDF5 can be generated using the program `Haar_Generator.jl` (Refer to this file in doubt of what the `HaarStates.h5` needs to contain). The data after running `PureStateReconstructor.jl` is stored in the `data` folder.
 
 The plotting program is in the `PlottingPureStates.ipynb` notebook, it works on it own and just need compiling. The article plot should be named `PureStatesHist.pdf`.
 
@@ -17,13 +17,13 @@ The plotting program is in the `PlottingPureStates.ipynb` notebook, it works on 
 
 ## Block Diagonal
 
-`BlockDiagReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the unitary transformations are provided with a HDF5 file named `data_contraejemplos.mat`. The data after running `BlockDiagReconstructor.jl` is stored in the `data` folder.
+`BlockDiagReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the target unitary transformations are provided with a HDF5 file named `data_contraejemplos.mat`. The data after running `BlockDiagReconstructor.jl` is stored in the `data` folder.
 
 
 The plotting program is in the `PlottingBlockDiag.ipynb` notebook, it works on it own and just need compiling. The article plot should be named `BlockDiagHist.pdf`.
 
 ## Haar Distributed
 
-`HaarUnitaryReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the unitary transformations are provided with a HDF5 file named `HaarUnitary.h5`. This HDF5 can be generated using the program `Unitary_Haar_Generator.jl` (Refer to this file in doubt of what the `HaarUnitary.h5` needs to contain). The data after running `HaarUnitaryReconstructor.jl` is stored in the `data` folder.
+`HaarUnitaryReconstructor.jl` is the program that generates the data, i.e, is the program that optimizes the phases for a PUMA configuration given the target unitary transformations are provided with a HDF5 file named `HaarUnitary.h5`. This HDF5 can be generated using the program `Unitary_Haar_Generator.jl` (Refer to this file in doubt of what the `HaarUnitary.h5` needs to contain). The data after running `HaarUnitaryReconstructor.jl` is stored in the `data` folder.
 
 The plotting program is in the `PlottingHaar.ipynb` notebook, it works on it own and just need compiling. The article plot should be named `HaarDistrHist.pdf`.
