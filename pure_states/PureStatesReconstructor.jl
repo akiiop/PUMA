@@ -1,6 +1,7 @@
 using Distributed, MAT, HDF5
-
+# Number of threads used for the parallelization, adjust according to hardware
 addprocs(4)
+
 @everywhere using LinearAlgebra, SharedArrays, Optim
 
 @everywhere function RandomUnitary(Dim)
@@ -32,20 +33,36 @@ end
 end
 
 function main()
+    # Number of times the optimization is carried for every individual state
+    # In post-analisis the minimum is selected 
     Repe = 20;
-    file=h5open("HaarStates.h5","r");
+    
+    # Loading the states that will be reconstructed
+    # the .h5 file needs to be prepared before hand
+    file=h5open("HaarStates.h5","r"); # Loading the file containing the states
     Dims=file["dimensions"][:];
 	MC=file["montecarlo"][1][1];
     DimN=size(Dims[1:end])[1];
+    
 	Data=SharedArray{Float64}(DimN,MC,Repe);
+    
     @show Repe, MC
 
-	for h=1:DimN;
-		Dim=Dims[h];
-		N=4;
-		OutStates=file["statesdim="*string(Dim)][:,:]
-		F = QuantumFourier(Dim);
+	for h=1:DimN;        
+		Dim=Dims[h]
+        
+        # Number of layers
+        # Needs to be changed manually in case of optimizing differen number of layers 
+        N=4 
+        
+        OutStates=file["statesdim="*string(Dim)][:,:]
+        
+        F = QuantumFourier(Dim);
+        
         @show Dim, N
+        
+        # Initial state of the circuits
+        # always starts as the 0 state
         InState=Matrix{Complex{Float64}}(I,Dim,Dim)[1,:];
 
 		@time @sync @distributed for i=1:MC
@@ -54,7 +71,8 @@ function main()
 				Data[h,i,j]=PUMIOpt(F,Dim,InState,State,N);
 			end
 		end
-
+        
+        # Data storage destination
 		file2=h5open("data/DataStatesDim="*string(Dim)*"Lay="*string(N)*".h5","w");
 		file2["infi"]=Data[h,:,:];
 		close(file2)

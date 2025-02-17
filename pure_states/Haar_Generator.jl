@@ -1,11 +1,19 @@
 using HDF5, LinearAlgebra
 
-MC=5000;
-file=h5open("HaarStates.h5","w");
-Dims=collect(3:10);
-DimN=size(Dims)[1];
+MC=5000 # Number of states that will be generated for each dimension
+
+file=h5open("HaarStates.h5","w") # file containing the remaining states
+
+Dims=collect(3:10) # Dimensions of the states
+DimN=size(Dims)[1]
+
+# Additional data that will be added to the .h5 file
+# This data is necesary for the simulations programs to work
+# unless the recronstuction program is modified
 file["dimensions"]=Dims
 file["montecarlo"]=[MC]
+
+# Haar distributed states generation
 for i=1:DimN
     z=randn(Dims[i],MC)+1im*randn(Dims[i],MC);
     states=z./sqrt.(sum(abs2.(z),dims=1))
