@@ -1,6 +1,7 @@
 using Distributed, SharedArrays, MAT
-
+# Number of threads used for the parallelization, adjust according to hardware
 addprocs(10)
+
 @everywhere using LinearAlgebra, Optim
 
 @everywhere function RandomUnitary(Dim)
@@ -32,29 +33,48 @@ end
 end
 
 function main()
+    # Number of times the optimization is carried for every individual matrix
+    # In post-analisis the minimum is selected 
     Repe = 30
-	Matrices=matread("data_contraejemplos.mat")["data_contraejemplos"];
+    
+    # Loading the states that will be reconstructed
+    # the .mat file needs to be prepared before hand
+    # Loading the file containing the mats
+	Matrices=matread("data_contraejemplos.mat")["data_contraejemplos"] # Loading the file containing the mats
 	DimN=size(Matrices)[2];
 	MC=size(Matrices[1][1])[3];
+    
 	Data=SharedArray{Float64}(DimN,MC,Repe);
-	print("Repe="*string(Repe));
-	for h=1:DimN;
-		Dim=2+h;
-		L=1
-		N=Dim+L;
-		UU=Matrices[h][1];
+    
+    @show Repe, MC
+    
+	for h=1:DimN
+        
+        Dim=2+h
+        
+        # N is the Number of layers
+        # Needs to be changed manually in case of optimizing differen number of layers 
+        # Program uses L to save the files as Lay=Dim+L
+        # Change L to in order to test differents layers 
+        L=1
+        N=Dim+L;
+        
+        UU=Matrices[h][1];
 		F = QuantumFourier(Dim);
-        println("lays="*string(N),"     MC="* string( MC) );
-		println(Dim);
+        
+        @show Dim, N
+
 		@time @sync @distributed for i=1:MC
 			U=UU[:,:,i];
 			for j=1:Repe
 				Data[h,i,j]=PUMIOpt(F,Dim,N,U);
 			end
 		end
-		file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".mat","w")
-		write(file,"infi",Data[h,:,:])
-		close(file)
+
+        # Data storage destination
+        file=matopen("data/lucianodata_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".mat","w")
+        write(file,"infi",Data[h,:,:])
+        close(file)
 	end
 # 	file=matopen("lucianodata.mat","w")
 # 	write(file,"infi",Data)
