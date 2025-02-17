@@ -1,6 +1,7 @@
 using Distributed, HDF5
-
+# Number of threads used for the parallelization, adjust according to hardware
 addprocs(10)
+
 @everywhere using LinearAlgebra, SharedArrays, Optim
 
 @everywhere function RandomUnitary(Dim)
@@ -32,10 +33,14 @@ end
 end
 
 function main()
-    
+    # Number of times the optimization is carried for every individual matrix
+    # In post-analisis the minimum is selected 
     Repe = 30
     
-    file = h5open("HaarUnitary.h5","r")
+    # Loading the states that will be reconstructed
+    # the .mat file needs to be prepared before hand
+    # Loading the file containing the mats    
+    file = h5open("HaarUnitary.h5","r") # Loading the file containing the mats
     MC = file["montecarlo"][1]
     Dims = file["dimensions"][:]
     DimN=size(Dims)[1]
@@ -45,9 +50,13 @@ function main()
     @show Repe,MC
 
     for (h,Dim) in enumerate(Dims)
-        
+        # N is the Number of layers
+        # Needs to be changed manually in case of optimizing differen number of layers 
+        # Program uses L to save the files as Lay=Dim+L
+        # Change L to in order to test differents layers 
         L=1
         N=Dim+L
+        
         UU = file["unitarydim="*string(Dim)][:,:,:]
         F = QuantumFourier(Dim)
         
@@ -62,7 +71,8 @@ function main()
             end
         
         end
-        
+
+        # Data storage destination
         datasave = h5open("data/HaarDistributed_Dim="*string(Dim)*"_Lay=Dim+"*string(L)*".h5","w")
         datasave["infi"]= Data[h,:,:]
         close(datasave)
