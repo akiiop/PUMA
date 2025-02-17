@@ -1,5 +1,10 @@
 # Introduction
-Repository for the simulations and data of the article [Minimum optical depth multi-port interferometers for approximating any unitary transformation and any pure state](https://doi.org/10.48550/arXiv.2002.01371)
+Repository for the simulations and data of the article [Minimum optical depth multi-port interferometers for approximating any unitary transformation and any pure state](https://doi.org/10.48550/arXiv.2002.01371). Within this repository all the necesary data and programs to recreate the histograms for the article can be found, meaning:
+
+- The States and Unitary Transformations recreated can be found as `.HDf5` or `.mat` files in the respective folders.
+- The programs that performed the optimization.
+- The data of the optimized phases for the PUMA's configutations.
+- The plotting programs
 
 
 # Pure States
