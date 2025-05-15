@@ -1,22 +1,26 @@
 
 
 load('data_contraejemplos.mat')
-infids_comparison = NaN(8,2);
+infids_comparison = NaN(8,100,2);
 
-parfor d = 3:10
+for d = 3:3
 
     L = 0;
-    infids = data_contraejemplos{d-2}{2}(:,1)
-    infids_min = min( infids.' );
-    [infid_worst, index_worst] = max( infids_min );
+    infids = data_contraejemplos{d-2}{2}(:,1);
+    [ infids_sort, index_sort ] = sort( infids,  'descend' );
+    UUs = data_contraejemplos{d-2}{1};
     
-    UUs = data_contraejemplos{d-2}{1}(:,:,index_worst)
-        
-    [~,b]=Multiport_Decomposition(UUs(:,:,index_worst),[],[],10,'MGS');
-    infid_matlab = b;
+    infids_temp = NaN(100,2);
+    parfor i = 1:4
+        UU = UUs(:,:,i)
+        [~,b]=Multiport_Decomposition(UU,[],[],10,'MGS');
+        infids_temp(i,:) = [ infids(i), b ];
+    end
     
-    infids_comparison(d-2,:) = [ infid_worst , infid_matlab ]
+    infids_comparison(d-2,:,:) = infids_temp;
+
+    %save( 'Julia_vs_matlab.mat', "infids_comparison" )
     
 end
 
-save( 'Julia_vs_matlab.mat', "infids_comparison" )
+
